@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robonomics PubSub</title>
+<meta name="description" content="Status and addresses of the Robonomics IPFS pubsub nodes (pubsub.robonomics.network).">
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --text: #16181d; --muted: #5f6673; --border: #e2e5ea;
+    --code-bg: #f0f2f5; --accent: #2f6fed;
+    --up: #1f9d55; --up-bg: #e3f5ea; --down: #d0342c; --down-bg: #fbe6e5; --wait: #8a6d00; --wait-bg: #fbf3d9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1115; --card: #171a21; --text: #e7e9ee; --muted: #9aa2b1; --border: #272b35;
+      --code-bg: #1f232c; --accent: #7aa2ff;
+      --up: #4cc38a; --up-bg: #15301f; --down: #ff6b62; --down-bg: #3a1917; --wait: #e2c14d; --wait-bg: #342c10;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1115; --card: #171a21; --text: #e7e9ee; --muted: #9aa2b1; --border: #272b35;
+    --code-bg: #1f232c; --accent: #7aa2ff;
+    --up: #4cc38a; --up-bg: #15301f; --down: #ff6b62; --down-bg: #3a1917; --wait: #e2c14d; --wait-bg: #342c10;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 960px; margin: 0 auto; padding: 32px 16px 48px; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  h2 { font-size: 17px; margin: 32px 0 12px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .summary { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 8px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px;
+          font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .up { color: var(--up); background: var(--up-bg); }
+  .down { color: var(--down); background: var(--down-bg); }
+  .wait { color: var(--wait); background: var(--wait-bg); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  .node-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: center; }
+  .node-name { font-weight: 650; font-size: 16px; }
+  .kv { display: grid; grid-template-columns: 110px 1fr; gap: 6px 12px; margin-top: 12px; align-items: start; }
+  .kv > .k { color: var(--muted); font-size: 13px; padding-top: 3px; }
+  .addr { display: flex; gap: 6px; align-items: flex-start; margin-bottom: 4px; }
+  code { font: 12.5px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--code-bg);
+         padding: 2px 6px; border-radius: 6px; overflow-wrap: anywhere; word-break: break-all; }
+  button.copy { flex: none; border: 1px solid var(--border); background: transparent; color: var(--muted);
+                border-radius: 6px; font-size: 12px; padding: 1px 8px; cursor: pointer; }
+  button.copy:hover { color: var(--accent); border-color: var(--accent); }
+  ul.topics { margin: 0; padding-left: 18px; }
+  .note { color: var(--muted); font-size: 13px; margin-top: 6px; }
+  a { color: var(--accent); }
+  footer { margin-top: 32px; color: var(--muted); font-size: 13px; }
+  @media (max-width: 560px) { .kv { grid-template-columns: 1fr; } .kv > .k { padding-top: 8px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Robonomics PubSub</h1>
+  <p class="sub">IPFS pubsub (gossipsub) nodes of the Robonomics network. Status is checked live from your browser.</p>
+
+  <div class="summary">
+    <span id="overall" class="pill wait">checking…</span>
+    <span id="checked" class="muted"></span>
+  </div>
+
+  <h2>Connect</h2>
+  <div class="card">
+    <div class="kv">
+      <div class="k">Bootstrap</div>
+      <div id="dnsaddr"></div>
+      <div class="k">Topics</div>
+      <div><ul id="topics" class="topics"></ul></div>
+    </div>
+    <p class="note">One address for all nodes: <code>ipfs bootstrap add /dnsaddr/pubsub.robonomics.network</code>
+      (or add it to <code>Peering.Peers</code> / your js-libp2p bootstrap list).</p>
+  </div>
+
+  <h2>Nodes</h2>
+  <div id="nodes"><div class="card muted">Loading node list…</div></div>
+
+  <footer>
+    Node list: <a href="nodes.json">nodes.json</a> ·
+    Source: <a href="https://github.com/airalab/pubsub-robonomics-network">airalab/pubsub-robonomics-network</a> ·
+    Each node answers <code>GET /health</code> → <code>ok</code>.
+  </footer>
+</main>
+
+<script>
+const REFRESH_MS = 30000, TIMEOUT_MS = 8000;
+const LABELS = { "wss": "wss", "quic-v1": "QUIC", "webtransport": "WebTransport", "tcp": "tcp" };
+let nodes = [];
+
+function el(tag, attrs = {}, ...children) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) k === "class" ? e.className = v : e.setAttribute(k, v);
+  for (const c of children) e.append(c);
+  return e;
+}
+function copyable(text) {
+  const btn = el("button", { class: "copy", type: "button", title: "Copy" }, "copy");
+  btn.addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(text); btn.textContent = "copied"; }
+    catch { btn.textContent = "select"; }
+    setTimeout(() => (btn.textContent = "copy"), 1500);
+  });
+  return el("div", { class: "addr" }, el("code", {}, text), btn);
+}
+
+function render(data) {
+  document.getElementById("dnsaddr").replaceChildren(copyable(data.dnsaddr));
+  document.getElementById("topics").replaceChildren(...data.topics.map(t => el("li", {}, el("code", {}, t))));
+  const box = document.getElementById("nodes");
+  box.replaceChildren(...data.nodes.map((n, i) => {
+    const kv = el("div", { class: "kv" }, el("div", { class: "k" }, "Peer ID"), el("div", {}, copyable(n.peerId)));
+    for (const [t, addrs] of Object.entries(n.addresses)) {
+      const col = el("div", {}, ...addrs.map(copyable));
+      if (t === "webtransport")
+        col.append(el("div", { class: "note" }, "certhash rotates; clients learn the current one via identify"));
+      kv.append(el("div", { class: "k" }, LABELS[t] || t), col);
+    }
+    return el("div", { class: "card" },
+      el("div", { class: "node-head" },
+        el("span", { class: "node-name" }, n.name),
+        el("span", { id: "st" + i, class: "pill wait" }, "checking…")),
+      kv);
+  }));
+}
+
+async function probe(url) {
+  const ctl = new AbortController(), t0 = performance.now();
+  const timer = setTimeout(() => ctl.abort(), TIMEOUT_MS);
+  try {
+    const r = await fetch(url, { cache: "no-store", signal: ctl.signal });
+    const body = (await r.text()).trim();
+    return { up: r.ok && body === "ok", ms: Math.round(performance.now() - t0), code: r.status };
+  } catch (e) {
+    return { up: false, err: e.name === "AbortError" ? "timeout" : "unreachable" };
+  } finally { clearTimeout(timer); }
+}
+
+async function check() {
+  const results = await Promise.all(nodes.map(n => probe(n.health)));
+  let upCount = 0;
+  results.forEach((r, i) => {
+    const pill = document.getElementById("st" + i);
+    if (r.up) { upCount++; pill.className = "pill up"; pill.textContent = `up · ${r.ms} ms`; }
+    else { pill.className = "pill down"; pill.textContent = r.err ? `down · ${r.err}` : `down · HTTP ${r.code}`; }
+  });
+  const all = nodes.length, overall = document.getElementById("overall");
+  overall.className = "pill " + (upCount === all ? "up" : upCount === 0 ? "down" : "wait");
+  overall.textContent = `${upCount} / ${all} nodes up`;
+  document.getElementById("checked").textContent = "checked " + new Date().toLocaleTimeString() + " · refreshes every 30 s";
+}
+
+fetch("nodes.json", { cache: "no-store" })
+  .then(r => r.json())
+  .then(data => { nodes = data.nodes; render(data); check(); setInterval(check, REFRESH_MS); })
+  .catch(() => { document.getElementById("nodes").replaceChildren(el("div", { class: "card" }, "Failed to load nodes.json")); });
+</script>
+</body>
+</html>
