@@ -11,13 +11,6 @@
     --code-bg: #f0f2f5; --accent: #2f6fed;
     --up: #1f9d55; --up-bg: #e3f5ea; --down: #d0342c; --down-bg: #fbe6e5; --wait: #8a6d00; --wait-bg: #fbf3d9;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #0f1115; --card: #171a21; --text: #e7e9ee; --muted: #9aa2b1; --border: #272b35;
-      --code-bg: #1f232c; --accent: #7aa2ff;
-      --up: #4cc38a; --up-bg: #15301f; --down: #ff6b62; --down-bg: #3a1917; --wait: #e2c14d; --wait-bg: #342c10;
-    }
-  }
   :root[data-theme="dark"] {
     --bg: #0f1115; --card: #171a21; --text: #e7e9ee; --muted: #9aa2b1; --border: #272b35;
     --code-bg: #1f232c; --accent: #7aa2ff;
@@ -53,12 +46,19 @@
   .note { color: var(--muted); font-size: 13px; margin-top: 6px; }
   a { color: var(--accent); }
   footer { margin-top: 32px; color: var(--muted); font-size: 13px; }
+  .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  button.theme { flex: none; border: 1px solid var(--border); background: var(--card); color: var(--text);
+                 border-radius: 8px; font: inherit; font-size: 13px; padding: 5px 12px; cursor: pointer; }
+  button.theme:hover { border-color: var(--accent); color: var(--accent); }
   @media (max-width: 560px) { .kv { grid-template-columns: 1fr; } .kv > .k { padding-top: 8px; } }
 </style>
 </head>
 <body>
 <main>
-  <h1>Robonomics PubSub</h1>
+  <div class="top">
+    <h1>Robonomics PubSub</h1>
+    <button id="theme" class="theme" type="button" title="Switch light / dark theme">Dark</button>
+  </div>
   <p class="sub">IPFS pubsub (gossipsub) nodes of the Robonomics network. Status is checked live from your browser.</p>
 
   <div class="summary">
@@ -89,6 +89,23 @@
 </main>
 
 <script>
+// Theme: light by default; the button toggles light <-> dark (remembered in this browser only).
+(() => {
+  const btn = document.getElementById("theme");
+  let mode = "light";
+  try { if (localStorage.getItem("theme") === "dark") mode = "dark"; } catch {}
+  const apply = () => {
+    document.documentElement.setAttribute("data-theme", mode);
+    btn.textContent = mode === "dark" ? "Light" : "Dark";   // label = theme you switch to
+  };
+  btn.addEventListener("click", () => {
+    mode = mode === "dark" ? "light" : "dark";
+    try { localStorage.setItem("theme", mode); } catch {}
+    apply();
+  });
+  apply();
+})();
+
 const REFRESH_MS = 30000, TIMEOUT_MS = 8000;
 const LABELS = { "wss": "wss", "quic-v1": "QUIC", "webtransport": "WebTransport", "tcp": "tcp" };
 let nodes = [];
