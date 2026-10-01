@@ -1,0 +1,81 @@
+{
+  "network": "Robonomics PubSub",
+  "dnsaddr": "/dnsaddr/pubsub.robonomics.network",
+  "implementation": "kubo v0.43.1",
+  "topics": [
+    "sensors.social/v1",
+    "sensors.social/v1/staging",
+    "airalab.lighthouse.5.robonomics.eth"
+  ],
+  "nodes": [
+    {
+      "name": "1.pubsub.robonomics.network",
+      "peerId": "12D3KooWBtG1GoLoUrR1SBXhG1VWq1wQWkssLEpmHMs331gicKak",
+      "health": "https://1.pubsub.robonomics.network/health",
+      "addresses": {
+        "wss": [
+          "/dns4/1.pubsub.robonomics.network/tcp/443/wss/p2p/12D3KooWBtG1GoLoUrR1SBXhG1VWq1wQWkssLEpmHMs331gicKak",
+          "/dns6/1.pubsub.robonomics.network/tcp/443/wss/p2p/12D3KooWBtG1GoLoUrR1SBXhG1VWq1wQWkssLEpmHMs331gicKak"
+        ],
+        "quic-v1": [
+          "/ip4/57.129.88.114/udp/4011/quic-v1/p2p/12D3KooWBtG1GoLoUrR1SBXhG1VWq1wQWkssLEpmHMs331gicKak",
+          "/ip6/2001:41d0:727:7200::3388/udp/4011/quic-v1/p2p/12D3KooWBtG1GoLoUrR1SBXhG1VWq1wQWkssLEpmHMs331gicKak"
+        ],
+        "webtransport": [
+          "/ip4/57.129.88.114/udp/4011/quic-v1/webtransport/p2p/12D3KooWBtG1GoLoUrR1SBXhG1VWq1wQWkssLEpmHMs331gicKak",
+          "/ip6/2001:41d0:727:7200::3388/udp/4011/quic-v1/webtransport/p2p/12D3KooWBtG1GoLoUrR1SBXhG1VWq1wQWkssLEpmHMs331gicKak"
+        ],
+        "tcp": [
+          "/ip4/57.129.88.114/tcp/4011/p2p/12D3KooWBtG1GoLoUrR1SBXhG1VWq1wQWkssLEpmHMs331gicKak",
+          "/ip6/2001:41d0:727:7200::3388/tcp/4011/p2p/12D3KooWBtG1GoLoUrR1SBXhG1VWq1wQWkssLEpmHMs331gicKak"
+        ]
+      }
+    },
+    {
+      "name": "2.pubsub.robonomics.network",
+      "peerId": "12D3KooWDmEbGiMS5HxLNSjjmkSUHHrbW8SQLzqopMq6HxZy11Jp",
+      "health": "https://2.pubsub.robonomics.network/health",
+      "addresses": {
+        "wss": [
+          "/dns4/2.pubsub.robonomics.network/tcp/443/wss/p2p/12D3KooWDmEbGiMS5HxLNSjjmkSUHHrbW8SQLzqopMq6HxZy11Jp",
+          "/dns6/2.pubsub.robonomics.network/tcp/443/wss/p2p/12D3KooWDmEbGiMS5HxLNSjjmkSUHHrbW8SQLzqopMq6HxZy11Jp"
+        ],
+        "quic-v1": [
+          "/ip4/57.129.145.210/udp/4011/quic-v1/p2p/12D3KooWDmEbGiMS5HxLNSjjmkSUHHrbW8SQLzqopMq6HxZy11Jp",
+          "/ip6/2001:41d0:80d:d200::3388/udp/4011/quic-v1/p2p/12D3KooWDmEbGiMS5HxLNSjjmkSUHHrbW8SQLzqopMq6HxZy11Jp"
+        ],
+        "webtransport": [
+          "/ip4/57.129.145.210/udp/4011/quic-v1/webtransport/p2p/12D3KooWDmEbGiMS5HxLNSjjmkSUHHrbW8SQLzqopMq6HxZy11Jp",
+          "/ip6/2001:41d0:80d:d200::3388/udp/4011/quic-v1/webtransport/p2p/12D3KooWDmEbGiMS5HxLNSjjmkSUHHrbW8SQLzqopMq6HxZy11Jp"
+        ],
+        "tcp": [
+          "/ip4/57.129.145.210/tcp/4011/p2p/12D3KooWDmEbGiMS5HxLNSjjmkSUHHrbW8SQLzqopMq6HxZy11Jp",
+          "/ip6/2001:41d0:80d:d200::3388/tcp/4011/p2p/12D3KooWDmEbGiMS5HxLNSjjmkSUHHrbW8SQLzqopMq6HxZy11Jp"
+        ]
+      }
+    },
+    {
+      "name": "3.pubsub.robonomics.network",
+      "peerId": "12D3KooWMDYKL1Gz85SY2gRNuzYZ7Pgg8yYxRWn8MKzVH97nXah1",
+      "health": "https://3.pubsub.robonomics.network/health",
+      "addresses": {
+        "wss": [
+          "/dns4/3.pubsub.robonomics.network/tcp/443/wss/p2p/12D3KooWMDYKL1Gz85SY2gRNuzYZ7Pgg8yYxRWn8MKzVH97nXah1",
+          "/dns6/3.pubsub.robonomics.network/tcp/443/wss/p2p/12D3KooWMDYKL1Gz85SY2gRNuzYZ7Pgg8yYxRWn8MKzVH97nXah1"
+        ],
+        "quic-v1": [
+          "/ip4/54.38.46.129/udp/4011/quic-v1/p2p/12D3KooWMDYKL1Gz85SY2gRNuzYZ7Pgg8yYxRWn8MKzVH97nXah1",
+          "/ip6/2001:41d0:203:2b81::1/udp/4011/quic-v1/p2p/12D3KooWMDYKL1Gz85SY2gRNuzYZ7Pgg8yYxRWn8MKzVH97nXah1"
+        ],
+        "webtransport": [
+          "/ip4/54.38.46.129/udp/4011/quic-v1/webtransport/p2p/12D3KooWMDYKL1Gz85SY2gRNuzYZ7Pgg8yYxRWn8MKzVH97nXah1",
+          "/ip6/2001:41d0:203:2b81::1/udp/4011/quic-v1/webtransport/p2p/12D3KooWMDYKL1Gz85SY2gRNuzYZ7Pgg8yYxRWn8MKzVH97nXah1"
+        ],
+        "tcp": [
+          "/ip4/54.38.46.129/tcp/4011/p2p/12D3KooWMDYKL1Gz85SY2gRNuzYZ7Pgg8yYxRWn8MKzVH97nXah1",
+          "/ip6/2001:41d0:203:2b81::1/tcp/4011/p2p/12D3KooWMDYKL1Gz85SY2gRNuzYZ7Pgg8yYxRWn8MKzVH97nXah1"
+        ]
+      }
+    }
+  ]
+}
